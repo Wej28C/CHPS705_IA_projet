@@ -1,0 +1,77 @@
+@startuml
+
+class UserData
+{
+	- name : string
+}
+Data <|-- UserData
+
+class Client
+{
+	- user : User
+
+	+ startMatchmaking() : void
+	+ startGame() : void
+}
+
+class MatchmakingClient 
+{
+	- user : User
+	
+	+ startMatchmaking(in data : MatchmakingData) : MatchmakingStatus
+	+ startGame(in data : MatchmakingResult) : bool
+}
+
+class GameClient 
+{
+	
+}
+
+class Data
+{
+	- version : uint_8
+	- type : char[4]
+}
+
+class MatchmakingData
+{
+	- game : GameData
+}
+Data <|-- MatchmakingData
+
+class MatchmakingResult
+{
+	- opponents : User
+}
+Data <|-- MatchmakingResult
+
+class GameData
+{
+	- name : string
+}
+Data <|-- GameData
+
+enum MatchmakingStatus 
+{
+	
+}
+
+class MatchmakingQueueHandler
+{
+	- players : Queue<Pair<UserData, MatchmakingData>>
+
+	- exec() : uint_32
+	- failedPlayer(in user : UserData) : bool
+	- succededPlayer(in user : UserData, in opponents : UserData[]) : bool
+	+ addPlayer(in user : UserData, in data : MatchmakingData) : MatchmakingStatus
+	+ removePlayer(in user) : bool
+}
+
+class MatchmakingHandler
+{
+	+ requestPlayGame(in user : UserData, in data : MatchmakingData) : MatchmakingStatus
+	+ playGame(in result : Pair<UserData, MatchmakingResult>[]) : bool
+	+ askStatus(in user : UserData, in destUser : UserData) : MatchmakingStatus
+}
+
+@enduml
