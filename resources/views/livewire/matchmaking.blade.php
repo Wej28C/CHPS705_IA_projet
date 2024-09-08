@@ -13,4 +13,29 @@
             Lancer la partie
         </button>
     </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ws = new WebSocket("ws://127.0.0.1:12345");
+
+            ws.onopen = function() {
+                console.log("Connected to the WebSocket server");
+                ws.send("Hello, server!");
+            };
+
+            ws.onmessage = function(event) {
+                console.log("Message from server: ", event.data);
+                var log = document.getElementById("log");
+                log.innerHTML += event.data + "<br>";
+            };
+
+            ws.onclose = function(event) {
+                console.log("Disconnected from the WebSocket server");
+            };
+
+            ws.onerror = function(error) {
+                console.log("WebSocket Error: " + error);
+            };
+        });
+    </script>
+
 </div>
