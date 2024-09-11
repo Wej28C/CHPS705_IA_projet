@@ -16,7 +16,9 @@ class Connection extends Model
      */
     protected $fillable = [
         'ip',
-        'port'
+        'port',
+        'game_id',
+        'robot_id'
     ];
 
     public function game()

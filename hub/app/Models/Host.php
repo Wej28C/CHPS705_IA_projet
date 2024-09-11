@@ -17,7 +17,8 @@ class Host extends Model
     protected $fillable = [
         'name',
         'ip',
-        'port'
+        'port',
+        "game_id"
     ];
 
     public function game()

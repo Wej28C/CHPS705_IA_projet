@@ -16,7 +16,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name')->unique();
             $table->string('ip');
-            $table->number('port');
+            $table->integer('port');
+            $table->foreignId('game_id')->constrained()->onDelete('cascade');
         });
     }
 

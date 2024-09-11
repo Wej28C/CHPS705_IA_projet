@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('ip');
-            $table->number('port');
+            $table->integer('port');
+            $table->foreignId('game_id')->constrained()->onDelete('cascade');
+            $table->foreignId('robot_id')->constrained()->onDelete('cascade');
         });
     }
 

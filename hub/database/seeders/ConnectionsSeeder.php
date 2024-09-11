@@ -16,12 +16,14 @@ class ConnectionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $game = Game::where('name', 'pendu', '=')->first();
-        $robots = Robot::where('name', 'pendu-')
+        $game = Game::where('name', 'hangman', '=')->first();
+        $robot = Robot::where('name', 'hangman-v1', '=')->first();
 
         Connection::create([
             'ip' => '127.0.0.1',
-            'port' => '12345'
+            'port' => '12345',
+            'game_id' => $game->id,
+            'robot_id' => $robot->id
         ]);
     }
 }

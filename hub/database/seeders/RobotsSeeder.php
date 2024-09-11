@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use App\Models\Robot;
+
 class RobotsSeeder extends Seeder
 {
     /**
@@ -12,6 +14,8 @@ class RobotsSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Robot::create([
+            'name' => 'hangman-v1'
+        ]);
     }
 }
