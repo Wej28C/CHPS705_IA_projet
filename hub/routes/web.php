@@ -18,4 +18,8 @@ Route::middleware([
     Route::get('/matchmaking', function() {
         return view('matchmaking');
     })->name('matchmaking');
+
+    Route::get('/game', function() {
+        return view('game');
+    })->name('game');
 });
