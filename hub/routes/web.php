@@ -22,4 +22,16 @@ Route::middleware([
     Route::get('/game', function() {
         return view('game');
     })->name('game');
+
+    Route::get('/connections', function() {
+        return view('connections');
+    })->name('connections');
+
+    Route::get('/robots', function() {
+        return view('robots');
+    })->name('robots');
+
+    Route::get('/hosts', function() {
+        return view('hosts');
+    })->name('hosts');
 });

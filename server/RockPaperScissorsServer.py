@@ -51,21 +51,22 @@ def handle_play(client, choix, server):
 
     game_info = games[client['id']]
     game = game_info['game']
+    print(game)
     opponent = game_info['opponent']
     role = game_info['role']
 
     # Conversion du choix en Enum
     try:
-        choix_enum = RockPaperScissorsChoice(choix)
+        choix_enum = RockPaperScissorsChoice[choix]
     except ValueError:
         server.send_message(client, json.dumps({'type': 'erreur', 'message': 'Choix invalide.'}))
         return
 
     # Enregistrement du choix du joueur
     if role == 'playerA':
-        game.play_a(choix_enum)
+        game.playForA(choix_enum)
     else:
-        game.play_b(choix_enum)
+        game.playForB(choix_enum)
 
     # Vérification si les deux joueurs ont fait leur choix
     if game.playA is not None and game.playB is not None:
@@ -80,7 +81,7 @@ def handle_play(client, choix, server):
 
 # Envoi du résultat du jeu aux deux clients
 def send_result(game, clientA, clientB, server):
-    result = game.get_result()
+    result = game.getResult()
 
     if result == 0:
         # Match nul
@@ -136,8 +137,12 @@ def client_left(client, server):
             games.pop(opponent['id'])
 
 # Configuration du serveur WebSocket
-server = WebsocketServer(port=12345, host='127.0.0.1')
+port = 12345
+ip = '127.0.0.1'
+server = WebsocketServer(port=port, host=ip)
 server.set_fn_new_client(new_client)
 server.set_fn_message_received(message_received)
 server.set_fn_client_left(client_left)
 server.run_forever()
+
+print(f"Le serveur a demarre ! [ip : {ip}] [port : {port}]")

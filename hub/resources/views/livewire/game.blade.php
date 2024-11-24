@@ -128,17 +128,16 @@
         let choix = null;
 
         if (x < optionWidth) {
-            choix = 'PIERRE';
+            choix = 'ROCK';
         } else if (x < optionWidth * 2) {
-            choix = 'FEUILLE';
+            choix = 'PAPER';
         } else {
-            choix = 'CISEAUX';
+            choix = 'SCISSORS';
         }
 
         envoyerChoix(choix);
     });
 
-    // Établir la connexion WebSocket
     const ws = new WebSocket('ws://{{ $ip }}:{{ $port }}');
 
     ws.onopen = function () 

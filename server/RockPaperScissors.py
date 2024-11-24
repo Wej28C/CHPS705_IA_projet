@@ -14,10 +14,16 @@ class RockPaperScissors:
         self.playB = None
         pass
 
-    def playA(self, play):
+    def hasPlayedA(self):
+        return self.playA is not None 
+    
+    def hasPlayedB(self):
+        return self.playB is not None 
+
+    def playForA(self, play):
         self.playA = play
 
-    def playB(self, play):
+    def playForB(self, play):
         self.playB = play
 
     def getResult(self):

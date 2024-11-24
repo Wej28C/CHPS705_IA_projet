@@ -21,6 +21,21 @@
                         {{ __('Jouer') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('connections') }}" :active="request()->routeIs('connections')" class="text-blue-200 hover:text-orange-400">
+                        {{ __('Connections') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('hosts') }}" :active="request()->routeIs('hosts')" class="text-blue-200 hover:text-orange-400">
+                        {{ __('Hosts') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('robots') }}" :active="request()->routeIs('robots')" class="text-blue-200 hover:text-orange-400">
+                        {{ __('IA') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
