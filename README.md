@@ -81,6 +81,8 @@ Pour générer les fichiers CSS et JS en mode production :
 npm run prod
 ```
 
+A noter que pour le bon fonctionnement du site. Il faut configurer un virtual host de sorte à se que l'url soit directement : performia
+
 ## Documentation
 
 La documentation associée au projet est disponible dans le dossier **`documentation/`**, qui inclut :
