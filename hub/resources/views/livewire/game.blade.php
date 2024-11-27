@@ -1,4 +1,14 @@
-<div class="flex flex-col items-center bg-gray-900 ">
+<div class="flex flex-col items-center bg-gray-900 "
+    x-data="{ over: false, 
+        result: '',
+        opponent_type: '',
+        opponent_id: ''
+    }"
+    x-on:finished.window="over = true; 
+        result = $event.detail.result;
+        opponent_type = $event.detail.opponent_type;
+        opponent_id = $event.detail.opponent_id;
+    ">
     <!-- Informations du jeu et serveur -->
     <div class="text-center mb-6">
         <h1 class="text-3xl font-bold text-orange-500">{{ $gameName }}</h1>
@@ -9,8 +19,32 @@
     <div class="w-full max-w-4xl bg-gray-800 shadow-lg rounded-lg p-4">
         <canvas id="gameCanvas" class="block w-full h-auto" style="aspect-ratio: 16 / 9; background-color: #040627;"></canvas>
     </div>
+
+    <!-- Popup de satisfaction -->
+    <div 
+        class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center transition ease-in-out duration-300"
+        x-transition.opacity
+        x-show="over">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 max-w-lg w-full mx-4 text-gray-200">
+            <h2 class="text-xl font-semibold text-orange-500 text-center mb-4">Merci d'avoir joué !</h2>
+            <p class="text-center mb-4">Résultat : <span class="text-blue-300 font-bold" x-text="result"></span></p>
+            <p class="text-center mb-4">Veuillez évaluer votre satisfaction sur une échelle de 1 à 10 :</p>
+            <div class="flex flex-wrap justify-center gap-2">
+                <template x-for="i in 10">
+                    <button 
+                        x-on:click="satisfaction = i; 
+                            $wire.registerGame(satisfaction, opponent_type, opponent_id); 
+                            over = false;" 
+                        class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                        x-text="i">
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
 </div>
 
+@script
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -178,7 +212,8 @@
         if (data.type === 'resultat') 
         {
             choixAdversaire = data.choixAdversaire;
-            afficherResultat(data.resultat, choixJoueur, choixAdversaire);
+            afficherResultat(data.winner, data.scoreA, data.scoreB, 
+                data.resultat, choixJoueur, choixAdversaire, data);
             isWaitingForResult = false;
         } 
         else if (data.type === 'erreur') 
@@ -187,25 +222,52 @@
             isWaitingForResult = false;
             drawGame();
         }
+        else if(data.type === 'start')
+        {
+            const message = JSON.stringify({
+                action: 'authentification', 
+                type: 'PLAYER',
+                id: "{{$this->user->id}}" 
+            });
+            ws.send(message);
+        }
     }
 
-    function afficherResultat(res, votreChoix, choixAdv) 
+    function afficherResultat(winner, scoreA, scoreB, res, votreChoix, choixAdv, data) 
     {
-        if (res === 'gagne') 
+        if(winner == 0) // Pas finis
         {
-            resultat = `Vous avez gagné ! Vous: ${votreChoix}, Adversaire: ${choixAdv}`;
-        } 
-        else if (res === 'perdu') 
-        {
-            resultat = `Vous avez perdu... Vous: ${votreChoix}, Adversaire: ${choixAdv}`;
-        } 
-        else 
-        {
-            resultat = `Match nul. Vous avez tous les deux choisi ${votreChoix}.`;
+            if (res === 'gagne') 
+            {
+                resultat = `Round gagné ! Vous: ${votreChoix}, Adversaire: ${choixAdv} (${scoreA}, ${scoreB})`;
+            } 
+            else if (res === 'perdu') 
+            {
+                resultat = `Round perdu... Vous: ${votreChoix}, Adversaire: ${choixAdv} (${scoreA}, ${scoreB})`;
+            } 
+            else 
+            {
+                resultat = `Round nul. Vous avez tous les deux choisi ${votreChoix} (${scoreA}, ${scoreB})`;
+            }
+            drawGame();
         }
-        drawGame();
+        else if(winner == 1  || winner == 2) // Gagne
+        {
+            $wire.dispatch('finished', { 
+                result: 'Gagné !',  
+                opponent_type: data.opponent_type,
+                opponent_id: data.opponent_id
+            });
+        }
+        else // Perdu 
+        {
+            window.location.href = '/matchmaking';
+            // On ne fait pas la popup de satisfaction car il y a pas pour l'instant
+            //$wire.dispatch('finished', { result: 'Perdu !'});
+        }
     }
 
     // Dessiner le jeu initialement
     drawGame();
 </script>
+@endscript

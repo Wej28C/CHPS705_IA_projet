@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Connection extends Model
+class Instance extends Model
 {
     use HasFactory;
 
@@ -15,24 +15,26 @@ class Connection extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'ip',
-        'port',
-        'game_id',
-        'robot_id'
+        'host_id'
     ];
+
+    public function host()
+    {
+        return $this->belongsTo(Host::class);
+    }
 
     public function game()
     {
-        return $this->belongsTo(Game::class);
+        return $this->host->game();
     }
 
-    public function robot()
+    public function users()
     {
-        return $this->belongsTo(Robot::class);
+        return $this->belongsToMany(User::class);
     }
 
-    public function instances()
+    public function connections()
     {
-        return $this->belongsToMany(Instance::class);
+        return $this->belongsToMany(Connection::class);
     }
 }

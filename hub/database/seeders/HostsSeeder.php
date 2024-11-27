@@ -20,7 +20,7 @@ class HostsSeeder extends Seeder
         Host::create([
             'name' => 'hangman-v1',
             'ip' => '127.0.0.1',
-            'port' => '12346',
+            'port' => '12345',
             'game_id' => $game->id
         ]);
     }

@@ -33,4 +33,13 @@ class Game extends Model
     {
         return $this->connections()->flatMap->robot;
     }
+
+    public function instances()
+    {
+        return $this->hasManyThrough(
+            Instance::class,
+            Host::class
+        );
+
+    }
 }

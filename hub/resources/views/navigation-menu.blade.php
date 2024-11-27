@@ -36,6 +36,11 @@
                         {{ __('IA') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('games') }}" :active="request()->routeIs('games')" class="text-blue-200 hover:text-orange-400">
+                        {{ __('Games') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">

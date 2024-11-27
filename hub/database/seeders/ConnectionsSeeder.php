@@ -20,8 +20,8 @@ class ConnectionsSeeder extends Seeder
         $robot = Robot::where('name', 'hangman-v1', '=')->first();
 
         Connection::create([
-            'ip' => '127.0.0.1',
-            'port' => '12345',
+            'ip' => '127.23.2.1',
+            'port' => '125',
             'game_id' => $game->id,
             'robot_id' => $robot->id
         ]);

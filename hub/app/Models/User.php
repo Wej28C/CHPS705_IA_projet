@@ -62,4 +62,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function instances()
+    {
+        return $this->belongsToMany(Instance::class);
+    }
+
+    public function instancesWithPivot()
+    {
+        return $this->belongsToMany(Instance::class)
+            ->withPivot(['ranking', 'satisfaction'])
+            ->withTimestamps();
+    }
 }

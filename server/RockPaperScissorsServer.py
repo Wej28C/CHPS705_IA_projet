@@ -21,8 +21,8 @@ def new_client(client, server):
         games[opponent['id']] = {'opponent': client, 'game': game, 'role': 'playerA'}
 
         # Notification aux deux clients
-        server.send_message(client, json.dumps({'type': 'info', 'message': 'Un adversaire a été trouvé !'}))
-        server.send_message(opponent, json.dumps({'type': 'info', 'message': 'Un adversaire a été trouvé !'}))
+        server.send_message(client, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
+        server.send_message(opponent, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
     else:
         # Aucun adversaire disponible, le client est mis en attente
         waiting_clients.append(client)
@@ -37,6 +37,9 @@ def message_received(client, server, message):
         if action == 'jouer':
             choix = data.get('choix')
             handle_play(client, choix, server)
+        elif action == 'authentification':
+            games[client['id']]['type'] = data.get('type')
+            games[client['id']]['id'] = data.get('id')
         else:
             server.send_message(client, json.dumps({'type': 'erreur', 'message': 'Action inconnue.'}))
     except json.JSONDecodeError:
@@ -71,7 +74,6 @@ def handle_play(client, choix, server):
     # Vérification si les deux joueurs ont fait leur choix
     if game.playA is not None and game.playB is not None:
         # Envoi du résultat aux deux joueurs
-        opponent_info = games[opponent['id']]
         clientA = client if role == 'playerA' else opponent
         clientB = opponent if role == 'playerA' else client
         send_result(game, clientA, clientB, server)
@@ -96,14 +98,27 @@ def send_result(game, clientA, clientB, server):
         resultA = 'perdu'
         resultB = 'gagne'
 
+    gameA_info = games[clientA['id']]
+    gameB_info = games[clientB['id']]
+
     messageA = json.dumps({
         'type': 'resultat',
+        'scoreA': game.scoreA,
+        'scoreB': game.scoreB,
+        'winner': game.is_finished(True),
+        'opponent_type': gameB_info['type'],
+        'opponent_id': gameB_info['id'],
         'resultat': resultA,
         'votreChoix': game.playA.value,
         'choixAdversaire': game.playB.value
     })
     messageB = json.dumps({
         'type': 'resultat',
+        'scoreA': game.scoreA,
+        'scoreB': game.scoreB,
+        'winner': game.is_finished(False),
+        'opponent_type': gameA_info['type'],
+        'opponent_id': gameA_info['id'],
         'resultat': resultB,
         'votreChoix': game.playB.value,
         'choixAdversaire': game.playA.value
@@ -139,10 +154,10 @@ def client_left(client, server):
 # Configuration du serveur WebSocket
 port = 12345
 ip = '127.0.0.1'
+print(f"Le serveur a demarre ! [ip : {ip}] [port : {port}]")
+
 server = WebsocketServer(port=port, host=ip)
 server.set_fn_new_client(new_client)
 server.set_fn_message_received(message_received)
 server.set_fn_client_left(client_left)
 server.run_forever()
-
-print(f"Le serveur a demarre ! [ip : {ip}] [port : {port}]")

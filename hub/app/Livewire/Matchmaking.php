@@ -25,12 +25,13 @@ class Matchmaking extends Component
             ])->validate();
 
         $game = Game::where('name', $validated['gameName'])->first();
-        $connection = $game->connections()->inRandomOrder()->first();
+        $host = $game->hosts()->inRandomOrder()->first();
 
         $data = [
             'gameName' => $validated['gameName'],
-            'ip' => $connection->ip,
-            'port' => $connection->port
+            'ip' => $host->ip,
+            'port' => $host->port,
+            'idHost' => $host->id
         ];
 
         Session::put($data);

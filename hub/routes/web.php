@@ -34,4 +34,8 @@ Route::middleware([
     Route::get('/hosts', function() {
         return view('hosts');
     })->name('hosts');
+
+    Route::get('/games', function() {
+        return view('games');
+    })->name('games');
 });
