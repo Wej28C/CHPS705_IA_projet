@@ -40,6 +40,21 @@ class Game extends Model
             Instance::class,
             Host::class
         );
+    }
 
+    public function maxUsersInInstance()
+    {
+        return $this->instances()
+            ->withCount('users')
+            ->get()
+            ->max('users_count');
+    }
+
+    public function maxConnectionsInInstance()
+    {
+        return $this->instances()
+            ->withCount('connections')
+            ->get()
+            ->max('connections_count');
     }
 }

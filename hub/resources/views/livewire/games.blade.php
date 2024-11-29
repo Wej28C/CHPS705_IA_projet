@@ -53,11 +53,21 @@
                         </template>
                     </tbody>
                 </table>
-                <button 
-                    x-on:click="show = false"
-                    class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                    Fermer
-                </button>
+                <div class="flex justify-end items-center space-x-4 mt-4">
+                    <!-- Bouton Fermer -->
+                    <button x-on:click="show = false"
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                        Fermer
+                    </button>
+                    
+                    <!-- Bouton Télécharger -->
+                    <a :href="`/games/export?id=${$wire.gameId}`"
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">
+                        Télécharger
+                    </a>
+                </div>
             </div>
         </div>
 

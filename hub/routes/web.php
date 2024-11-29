@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GameController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,4 +39,6 @@ Route::middleware([
     Route::get('/games', function() {
         return view('games');
     })->name('games');
+
+    Route::get('/games/export', [GameController::class, 'export'])->name('games.export');
 });

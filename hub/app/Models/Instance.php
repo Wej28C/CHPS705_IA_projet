@@ -33,6 +33,13 @@ class Instance extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function usersWithPivot()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['ranking', 'satisfaction'])
+            ->withTimestamps();
+    }
+
     public function connections()
     {
         return $this->belongsToMany(Connection::class);
