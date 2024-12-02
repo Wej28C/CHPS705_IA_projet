@@ -15,7 +15,7 @@ class RobotsSeeder extends Seeder
     public function run(): void
     {
         Robot::create([
-            'name' => 'hangman-v1'
+            'name' => 'shifumi-v1'
         ]);
     }
 }

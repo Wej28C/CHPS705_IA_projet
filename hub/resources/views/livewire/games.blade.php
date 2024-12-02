@@ -2,7 +2,7 @@
     <div x-cloak>
         <!-- Popup affichant les instances -->
         <div 
-            class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center transition ease-in-out duration-300"
+            class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center transition ease-in-out duration-300 z-50"
             x-transition.opacity    
             x-data="{ show: false }" 
             x-show="show"

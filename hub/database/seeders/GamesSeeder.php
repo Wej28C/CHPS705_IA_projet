@@ -15,8 +15,8 @@ class GamesSeeder extends Seeder
     public function run(): void
     {
         Game::create([
-            'name' => 'hangman',
-            'description' => 'A super game !'
+            'name' => 'shifumi',
+            'description' => 'Le jeu super du Pierre Feuille Ciseau !'
         ]);
     }
 }

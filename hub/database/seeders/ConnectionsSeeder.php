@@ -16,8 +16,8 @@ class ConnectionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $game = Game::where('name', 'hangman', '=')->first();
-        $robot = Robot::where('name', 'hangman-v1', '=')->first();
+        $game = Game::where('name', 'shifumi', '=')->first();
+        $robot = Robot::where('name', 'shifumi-v1', '=')->first();
 
         Connection::create([
             'ip' => '127.23.2.1',
