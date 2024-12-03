@@ -2,7 +2,7 @@ from websocket_server import WebsocketServer
 import json
 from RockPaperScissors import RockPaperScissors
 from RockPaperScissors import RockPaperScissorsChoice
-
+from RockPaperScissorsIA import RockPaperScissorsAI
 clients = []
 waiting_clients = []
 games = {}
@@ -16,13 +16,26 @@ def new_client(client, server):
         opponent = waiting_clients.pop(0)
         # Création d'un nouveau jeu
         game = RockPaperScissors()
+        if isinstance(opponent, dict) and opponent.get('is_ai', False):
+            # Opponent is AI, we simulate a match
+            ai_client = RockPaperScissorsAI("localhost", 12345)  # Créer un client IA
+            game_info = {'opponent': ai_client, 'game': game, 'role': 'playerA'}
+            games[client['id']] = game_info
+            games[ai_client.id] = {'opponent': client, 'game': game, 'role': 'playerB'}
+            # L'IA fait son choix
+            ai_choice, _ = ai_client.make_choice()
+            game.playForB(ai_choice)  # Jouer pour l'IA
+            server.send_message(client, json.dumps({'type': 'start', 'message': 'Un adversaire IA a été trouvé !'}))
+            send_result(game, client, ai_client, server)
+        
         # Attribution des rôles
-        games[client['id']] = {'opponent': opponent, 'game': game, 'role': 'playerB'}
-        games[opponent['id']] = {'opponent': client, 'game': game, 'role': 'playerA'}
+        else: 
+            games[client['id']] = {'opponent': opponent, 'game': game, 'role': 'playerB'}
+            games[opponent['id']] = {'opponent': client, 'game': game, 'role': 'playerA'}
 
-        # Notification aux deux clients
-        server.send_message(client, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
-        server.send_message(opponent, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
+            # Notification aux deux clients
+            server.send_message(client, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
+            server.send_message(opponent, json.dumps({'type': 'start', 'message': 'Un adversaire a été trouvé !'}))
     else:
         # Aucun adversaire disponible, le client est mis en attente
         waiting_clients.append(client)
@@ -37,6 +50,15 @@ def message_received(client, server, message):
         if action == 'jouer':
             choix = data.get('choix')
             handle_play(client, choix, server)
+           
+            # Si l'adversaire est l'IA, l'IA joue automatiquement
+            game_info = games[client['id']]
+            game = game_info['game']
+            opponent = game_info['opponent']
+            
+            if isinstance(opponent, RockPaperScissorsAI):  # Vérifier si l'adversaire est l'IA
+                ai_choice, _ = opponent.make_choice()
+                handle_play(opponent, ai_choice, server)  # IA fait son choix
         elif action == 'authentification':
             games[client['id']]['type'] = data.get('type')
             games[client['id']]['id'] = data.get('id')
